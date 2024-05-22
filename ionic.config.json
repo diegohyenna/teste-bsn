@@ -1,0 +1,7 @@
+{
+  "name": "teste-bsn",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
