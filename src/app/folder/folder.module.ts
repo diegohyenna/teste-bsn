@@ -8,6 +8,8 @@ import { FolderPageRoutingModule } from './folder-routing.module';
 
 import { FolderPage } from './folder.page';
 import { CommonComponentsModule } from '../components/common-components.module';
+import { HomePage } from './pages/home/home.page';
+import { PokemonPage } from './pages/pokemon/pokemon.page';
 
 @NgModule({
   imports: [
@@ -17,6 +19,6 @@ import { CommonComponentsModule } from '../components/common-components.module';
     FolderPageRoutingModule,
     CommonComponentsModule,
   ],
-  declarations: [FolderPage],
+  declarations: [FolderPage, HomePage, PokemonPage],
 })
 export class FolderPageModule {}
