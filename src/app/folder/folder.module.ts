@@ -10,6 +10,7 @@ import { FolderPage } from './folder.page';
 import { CommonComponentsModule } from '../components/common-components.module';
 import { HomePage } from './pages/home/home.page';
 import { PokemonPage } from './pages/pokemon/pokemon.page';
+import { FavoritePage } from './pages/favorite/favorite.page';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { PokemonPage } from './pages/pokemon/pokemon.page';
     FolderPageRoutingModule,
     CommonComponentsModule,
   ],
-  declarations: [FolderPage, HomePage, PokemonPage],
+  declarations: [FolderPage, HomePage, PokemonPage, FavoritePage],
 })
 export class FolderPageModule {}
