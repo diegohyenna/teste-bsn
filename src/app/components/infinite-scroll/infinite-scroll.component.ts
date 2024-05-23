@@ -12,8 +12,12 @@ import { Pokemons } from 'src/app/models/api.model';
 })
 export class InfiniteScrollComponent implements OnInit {
   protected pokemons?: Pokemons;
-  private limit = 0;
-  private offset = 151;
+
+  private readonly initialLimit = 0;
+  private readonly initialOffset = 151;
+
+  private limit = this.initialLimit;
+  private offset = this.initialOffset;
 
   component = PokemonPage;
 
@@ -40,6 +44,14 @@ export class InfiniteScrollComponent implements OnInit {
     setTimeout(() => {
       (ev as InfiniteScrollCustomEvent).target.complete();
     }, 500);
+  }
+
+  handleRefresh(event: any) {
+    this.pokemons = undefined;
+    setTimeout(() => {
+      this.generateItems(this.initialOffset, this.initialLimit);
+      event.target.complete();
+    }, 2000);
   }
 
   goToPokemonPage(pokemonName: string) {
