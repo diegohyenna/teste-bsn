@@ -1,0 +1,17 @@
+<ion-list>
+  <ion-item
+    *ngFor="let pokemon of pokemons?.results; let index"
+    (click)="goToPokemonPage(pokemon.name)"
+  >
+    <ion-avatar slot="start">
+      <img [src]="'https://picsum.photos/80/80?random=' + index" alt="avatar" />
+    </ion-avatar>
+    <ion-label>{{ pokemon.name }}</ion-label>
+  </ion-item>
+</ion-list>
+<app-infinite-scroll
+  [limit]="limit"
+  [offset]="offset"
+  (generateItemsEvent)="loadPokemons($event.offset, $event.limit)"
+  (handleRefreshEvent)="clearPokemons($event)"
+></app-infinite-scroll>
