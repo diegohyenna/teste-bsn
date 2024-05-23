@@ -1,17 +1,36 @@
 <ion-list>
-  <ion-item
-    *ngFor="let pokemon of pokemons?.results; let index"
-    (click)="goToPokemonPage(pokemon.name)"
-  >
-    <ion-avatar slot="start">
-      <img [src]="'https://picsum.photos/80/80?random=' + index" alt="avatar" />
+  <ion-item *ngFor="let pokemon of pokemons; let index" class="pokemon-list">
+    <div class="pokemon-details">
+      <div class="pokemon-detail">
+        <ion-text class="pokemon-number">
+          <h5>{{ "#" + pokemon.id }}</h5>
+        </ion-text>
+        <ion-text class="pokemon-name" (click)="goToPokemonPage(pokemon.name)">
+          <h5>{{ pokemon.name }}</h5>
+        </ion-text>
+        <ion-buttons slot="end">
+          <ion-button (click)="favoritePokemon(pokemon)">
+            <ion-icon name="star-outline"></ion-icon
+          ></ion-button>
+        </ion-buttons>
+      </div>
+
+      <div class="pokemon-types">
+        <div class="pokemon-type" *ngFor="let type of pokemon.types">
+          {{ type.type.name }}
+        </div>
+      </div>
+    </div>
+
+    <ion-avatar slot="end">
+      <img
+        [src]="pokemon.sprites.other['official-artwork'].front_default"
+        alt="foto do pokemon"
+      />
     </ion-avatar>
-    <ion-label>{{ pokemon.name }}</ion-label>
   </ion-item>
 </ion-list>
 <app-infinite-scroll
-  [limit]="limit"
-  [offset]="offset"
-  (generateItemsEvent)="loadPokemons($event.offset, $event.limit)"
+  (generateItemsEvent)="generateItems($event)"
   (handleRefreshEvent)="clearPokemons($event)"
 ></app-infinite-scroll>

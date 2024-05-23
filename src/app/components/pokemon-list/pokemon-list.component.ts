@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { Pokemons } from 'src/app/models/api.model';
+import { Pokemon, Pokemons } from 'src/app/models/api.model';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class PokemonListComponent implements OnInit {
   public limit = this.initialLimit;
   public offset = this.initialOffset;
 
-  protected pokemons?: Pokemons;
+  protected pokemons: Pokemon[] = [];
 
   constructor(
     private _navController: NavController,
@@ -23,22 +23,47 @@ export class PokemonListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.clearPokemons(true);
     this.loadPokemons(this.offset, this.limit);
+  }
+
+  generateItems(type: string) {
+    if (type == 'load') {
+      this.limit = this.offset;
+      this.offset += this.offset;
+      this.loadPokemons(this.offset, this.limit);
+    }
+
+    if (type == 'initialize') {
+      this.loadPokemons(this.initialOffset, this.offset);
+    }
   }
 
   loadPokemons(offset: number, limit: number) {
     this._apiService
-      .getAllPokemonsByLimitAndOffset(offset, limit)
+      .getAllPokemonsByLimitAndOffset(this.offset, this.limit)
       .subscribe((pokemons) => {
-        this.pokemons = pokemons;
+        // console.log(pokemons.name);
+        // console.log(pokemons.order);
+        // console.log(pokemons.types);
+        // console.log(pokemons.id);
+        this.pokemons.push(pokemons);
       });
   }
 
   clearPokemons(clean: boolean) {
-    if (clean) this.pokemons = undefined;
+    if (clean) {
+      this.pokemons = [];
+      this.limit = this.initialLimit;
+      this.offset = this.initialOffset;
+    }
   }
 
   goToPokemonPage(pokemonName: string) {
     this._navController.navigateForward(`folder/pokemon/${pokemonName}`);
+  }
+
+  favoritePokemon(pokemon: Pokemon) {
+    console.log(pokemon);
   }
 }

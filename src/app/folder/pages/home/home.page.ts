@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-pokemon',
   templateUrl: './home.page.html',
+  styleUrl: './home.page.scss',
 })
 export class HomePage implements OnInit {
   public folder!: string;

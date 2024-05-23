@@ -1,0 +1,72 @@
+ion-list {
+  background: transparent;
+}
+
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --ion-safe-area-right: 0;
+  --inner-border-width: 0;
+  background-color: white;
+  border-radius: 12px;
+  margin-bottom: 12px;
+
+  ion-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .pokemon-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px;
+    width: 100%;
+    color: #383a3e;
+
+    .pokemon-detail {
+      display: flex;
+      gap: 4px;
+
+      .pokemon-name h5,
+      .pokemon-number h5 {
+        margin: 4px;
+      }
+
+      .pokemon-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 110px;
+
+        h5 {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+
+      ion-buttons {
+        justify-content: end;
+        flex-grow: 1;
+      }
+    }
+
+    .pokemon-types {
+      display: flex;
+      gap: 12px;
+      color: #383a3e;
+
+      .pokemon-type {
+        padding: 2px 10px;
+        border: 1px solid #383a3e;
+        border-radius: 10px;
+        width: 100%;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 12px;
+      }
+    }
+  }
+}
