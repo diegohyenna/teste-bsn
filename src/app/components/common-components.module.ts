@@ -5,9 +5,10 @@ import { InfiniteScrollComponent } from './infinite-scroll/infinite-scroll.compo
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './header/header.component';
 import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
+import { CommonDirectivesModule } from '../directives/common-directives.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, CommonDirectivesModule],
   declarations: [
     InfiniteScrollComponent,
     HeaderComponent,

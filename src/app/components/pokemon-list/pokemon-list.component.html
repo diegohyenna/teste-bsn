@@ -16,7 +16,12 @@
       </div>
 
       <div class="pokemon-types">
-        <div class="pokemon-type" *ngFor="let type of pokemon.types">
+        <div
+          class="pokemon-type"
+          *ngFor="let type of pokemon.types"
+          appPokemonType
+          [pokemonType]="type.type.name"
+        >
           {{ type.type.name }}
         </div>
       </div>
