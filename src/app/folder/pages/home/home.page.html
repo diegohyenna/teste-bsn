@@ -5,5 +5,8 @@
       <ion-title size="large">Lista</ion-title>
     </ion-toolbar>
   </ion-header>
-  <app-pokemon-list></app-pokemon-list>
+  <app-pokemon-list
+    [data]="pokemons"
+    (generateItemsEvent)="generateItems($event)"
+  ></app-pokemon-list>
 </ion-content>

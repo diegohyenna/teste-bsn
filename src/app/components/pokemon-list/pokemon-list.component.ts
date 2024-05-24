@@ -1,7 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { Pokemon, Pokemons } from 'src/app/models/api.model';
+import { Pokemon } from 'src/app/models/api.model';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -9,77 +20,58 @@ import { ApiService } from 'src/app/services/api.service';
   templateUrl: 'pokemon-list.component.html',
   styleUrls: ['pokemon-list.component.scss'],
 })
-export class PokemonListComponent implements OnInit {
-  private readonly initialLimit = 0;
-  private readonly initialOffset = 50;
-
-  public limit = this.initialLimit;
-  public offset = this.initialOffset;
-
-  protected pokemons: Pokemon[] = [];
-
-  private listPokemonEnded = false;
+export class PokemonListComponent implements OnChanges {
+  @Input() data: Pokemon[] = [];
   loading = false;
 
+  @Output() generateItemsEvent = new EventEmitter<'load' | 'initialize'>();
+
+  pokemons: Pokemon[] = [];
+  pokemonPromisses: any = [];
+  lastPokemonArrayLength = 0;
+  lastPokemonId = 0;
+  imagesLoaded = 0;
   favorite: any = [];
 
   constructor(
     private _navController: NavController,
-    private _apiService: ApiService,
     private dbService: NgxIndexedDBService
-  ) {}
-
-  ngOnInit() {
-    this.clearPokemons(true);
-    this.loadPokemons(this.offset, this.limit);
-  }
-
-  generateItems(type: string) {
+  ) {
     this.loading = true;
-    if (type == 'load') {
-      this.limit = this.offset;
-      this.offset += this.offset;
-      this.loadPokemons(this.offset, this.limit);
-    }
+  }
 
-    if (type == 'initialize') {
-      this.loadPokemons(this.initialOffset, this.initialLimit);
+  ngOnChanges(changes: any): void {
+    if (
+      changes?.data &&
+      changes?.data?.currentValue &&
+      changes?.data?.currentValue?.length != this.lastPokemonArrayLength
+    ) {
+      this.loading = true;
+      this.pokemonPromisses.push(
+        this.data.forEach((poke) => {
+          this.lastPokemonId = poke.id;
+          this.pokemons.push(poke);
+          this.getFavoritePokemon(poke);
+        })
+      );
+      this.lastPokemonArrayLength = changes?.data?.currentValue?.length;
+      Promise.all([this.pokemonPromisses]).then(() => {
+        this.loading = false;
+      });
     }
   }
 
-  loadPokemons(offset: number, limit: number) {
-    if (!this.listPokemonEnded) {
-      this._apiService.getAllPokemonsByLimitAndOffset(offset, limit).subscribe(
-        (result) => {
-          if (result.offset === 0 && result.limit === 0) {
-            this.listPokemonEnded = true;
-          }
-          this.limit = result.limit;
-          this.offset = result.offset;
-          result.pokemons.forEach((poke) => {
-            this.pokemons.push(poke);
-            this.getFavoritePokemon(poke);
-          });
-        },
-        () => {},
-        () => {
-          setTimeout(() => {
-            this.loading = false;
-          }, 2000);
-        }
-      );
-    } else {
-      setTimeout(() => {
-        this.loading = false;
-      }, 2000);
-    }
+  generateItems(type: 'load' | 'initialize') {
+    this.generateItemsEvent.emit(type);
   }
 
   clearPokemons(clean: boolean) {
     if (clean) {
       this.pokemons = [];
-      this.limit = this.initialLimit;
-      this.offset = this.initialOffset;
+      this.pokemonPromisses = [];
+      this.lastPokemonArrayLength = 0;
+      this.lastPokemonId = 0;
+      this.imagesLoaded = 0;
     }
   }
 

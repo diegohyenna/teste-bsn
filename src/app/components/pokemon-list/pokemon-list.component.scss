@@ -1,3 +1,11 @@
+.hide {
+  visibility: hidden;
+}
+
+.show {
+  visibility: visible;
+}
+
 ion-list {
   background: transparent;
 }
@@ -14,6 +22,11 @@ ion-item {
   ion-avatar {
     width: 100px;
     height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-bottom-left-radius: 0;
   }
 
   .pokemon-details {
