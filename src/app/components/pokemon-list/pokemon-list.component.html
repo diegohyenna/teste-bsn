@@ -1,5 +1,8 @@
 <ion-list>
-  <ion-item *ngFor="let pokemon of pokemons; let index" class="pokemon-list">
+  <ion-item
+    *ngFor="let pokemon of pokemons; let i = index"
+    class="pokemon-list"
+  >
     <div class="pokemon-details">
       <div class="pokemon-detail">
         <ion-text class="pokemon-number">
@@ -9,7 +12,7 @@
           <h5>{{ pokemon.name }}</h5>
         </ion-text>
         <ion-buttons slot="end">
-          <ion-button (click)="favoritePokemon(pokemon)">
+          <ion-button (click)="favoritePokemon(pokemon, i)">
             <ion-icon name="star-outline"></ion-icon
           ></ion-button>
         </ion-buttons>

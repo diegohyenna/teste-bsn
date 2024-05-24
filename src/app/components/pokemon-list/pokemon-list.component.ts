@@ -41,12 +41,8 @@ export class PokemonListComponent implements OnInit {
 
   loadPokemons(offset: number, limit: number) {
     this._apiService
-      .getAllPokemonsByLimitAndOffset(this.offset, this.limit)
+      .getAllPokemonsByLimitAndOffset(offset, limit)
       .subscribe((pokemons) => {
-        // console.log(pokemons.name);
-        // console.log(pokemons.order);
-        // console.log(pokemons.types);
-        // console.log(pokemons.id);
         this.pokemons.push(pokemons);
       });
   }
@@ -63,7 +59,7 @@ export class PokemonListComponent implements OnInit {
     this._navController.navigateForward(`folder/pokemon/${pokemonName}`);
   }
 
-  favoritePokemon(pokemon: Pokemon) {
+  favoritePokemon(pokemon: Pokemon, pokemonIndex: number) {
     console.log(pokemon);
   }
 }
