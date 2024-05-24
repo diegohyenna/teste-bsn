@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Pokemon, Pokemons } from 'src/app/models/api.model';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -10,16 +11,22 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class PokemonListComponent implements OnInit {
   private readonly initialLimit = 0;
-  private readonly initialOffset = 151;
+  private readonly initialOffset = 50;
 
   public limit = this.initialLimit;
   public offset = this.initialOffset;
 
   protected pokemons: Pokemon[] = [];
 
+  private listPokemonEnded = false;
+  loading = false;
+
+  favorite: any = [];
+
   constructor(
     private _navController: NavController,
-    private _apiService: ApiService
+    private _apiService: ApiService,
+    private dbService: NgxIndexedDBService
   ) {}
 
   ngOnInit() {
@@ -28,6 +35,7 @@ export class PokemonListComponent implements OnInit {
   }
 
   generateItems(type: string) {
+    this.loading = true;
     if (type == 'load') {
       this.limit = this.offset;
       this.offset += this.offset;
@@ -35,16 +43,36 @@ export class PokemonListComponent implements OnInit {
     }
 
     if (type == 'initialize') {
-      this.loadPokemons(this.initialOffset, this.offset);
+      this.loadPokemons(this.initialOffset, this.initialLimit);
     }
   }
 
   loadPokemons(offset: number, limit: number) {
-    this._apiService
-      .getAllPokemonsByLimitAndOffset(offset, limit)
-      .subscribe((pokemons) => {
-        this.pokemons.push(pokemons);
-      });
+    if (!this.listPokemonEnded) {
+      this._apiService.getAllPokemonsByLimitAndOffset(offset, limit).subscribe(
+        (result) => {
+          if (result.offset === 0 && result.limit === 0) {
+            this.listPokemonEnded = true;
+          }
+          this.limit = result.limit;
+          this.offset = result.offset;
+          result.pokemons.forEach((poke) => {
+            this.pokemons.push(poke);
+            this.getFavoritePokemon(poke);
+          });
+        },
+        () => {},
+        () => {
+          setTimeout(() => {
+            this.loading = false;
+          }, 2000);
+        }
+      );
+    } else {
+      setTimeout(() => {
+        this.loading = false;
+      }, 2000);
+    }
   }
 
   clearPokemons(clean: boolean) {
@@ -59,7 +87,34 @@ export class PokemonListComponent implements OnInit {
     this._navController.navigateForward(`folder/pokemon/${pokemonName}`);
   }
 
-  favoritePokemon(pokemon: Pokemon, pokemonIndex: number) {
-    console.log(pokemon);
+  getFavoritePokemon(pokemon: Pokemon) {
+    this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
+      if (poke) {
+        this.favorite[pokemon.id] = true;
+      } else {
+        this.favorite[pokemon.id] = false;
+      }
+    });
+  }
+
+  favoritePokemon(pokemon: Pokemon) {
+    this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
+      if (poke) {
+        this.dbService.deleteByKey('favorites', pokemon.id).subscribe((key) => {
+          this.favorite[pokemon.id] = false;
+          console.log(key);
+        });
+      } else {
+        this.dbService
+          .add('favorites', {
+            pokemonId: pokemon.id,
+            pokemonName: pokemon.name,
+          })
+          .subscribe((key) => {
+            console.log('key: ', key);
+            this.favorite[pokemon.id] = true;
+          });
+      }
+    });
   }
 }

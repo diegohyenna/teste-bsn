@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 @Component({
@@ -6,21 +13,24 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
   templateUrl: 'infinite-scroll.component.html',
   styleUrls: ['infinite-scroll.component.scss'],
 })
-export class InfiniteScrollComponent {
+export class InfiniteScrollComponent implements OnChanges {
+  ev: any;
+  @Input() loading = false;
   @Output() generateItemsEvent = new EventEmitter<'load' | 'initialize'>();
   @Output() handleRefreshEvent = new EventEmitter<boolean>();
 
   constructor() {}
 
   onIonInfinite(ev: InfiniteScrollCustomEvent) {
-    setTimeout(() => {
-      this.generateItemsEvent.emit('load');
-      ev.target.complete();
-    }, 1000);
+    this.generateItemsEvent.emit('load');
+    this.ev = ev;
+  }
+
+  ngOnChanges(changes: any): void {
+    if (!changes.loading.currentValue && this.ev) this.ev.target.complete();
   }
 
   handleRefresh(event: any) {
-    console.log('refresh');
     this.handleRefreshEvent.emit(true);
     setTimeout(() => {
       this.handleRefreshEvent.emit(false);

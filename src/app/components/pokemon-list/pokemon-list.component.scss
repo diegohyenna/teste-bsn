@@ -7,7 +7,7 @@ ion-item {
   --padding-end: 0;
   --ion-safe-area-right: 0;
   --inner-border-width: 0;
-  background-color: white;
+  --background: white;
   border-radius: 12px;
   margin-bottom: 12px;
 
@@ -37,7 +37,6 @@ ion-item {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 110px;
 
         h5 {
           overflow: hidden;

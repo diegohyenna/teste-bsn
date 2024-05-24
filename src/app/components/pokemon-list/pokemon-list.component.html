@@ -12,9 +12,13 @@
           <h5>{{ pokemon.name }}</h5>
         </ion-text>
         <ion-buttons slot="end">
-          <ion-button (click)="favoritePokemon(pokemon, i)">
-            <ion-icon name="star-outline"></ion-icon
-          ></ion-button>
+          <ion-button (click)="favoritePokemon(pokemon)">
+            <ion-icon
+              *ngIf="!this.favorite[pokemon.id]"
+              name="star-outline"
+            ></ion-icon>
+            <ion-icon *ngIf="this.favorite[pokemon.id]" name="star"></ion-icon>
+          </ion-button>
         </ion-buttons>
       </div>
 
@@ -32,6 +36,7 @@
 
     <ion-avatar slot="end">
       <img
+        *ngIf="pokemon.sprites.other['official-artwork'].front_default"
         [src]="pokemon.sprites.other['official-artwork'].front_default"
         alt="foto do pokemon"
       />
@@ -39,6 +44,7 @@
   </ion-item>
 </ion-list>
 <app-infinite-scroll
+  [loading]="loading"
   (generateItemsEvent)="generateItems($event)"
   (handleRefreshEvent)="clearPokemons($event)"
 ></app-infinite-scroll>
