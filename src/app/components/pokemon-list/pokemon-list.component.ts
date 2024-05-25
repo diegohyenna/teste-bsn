@@ -1,24 +1,35 @@
 import {
+  AfterContentChecked,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Pokemon } from 'src/app/models/api.model';
+
+type FavoriteEvent = {
+  type: 'added' | 'deleted';
+  pokemonId: number;
+};
 
 @Component({
   selector: 'app-pokemon-list',
   templateUrl: 'pokemon-list.component.html',
   styleUrls: ['pokemon-list.component.scss'],
 })
-export class PokemonListComponent implements OnChanges {
+export class PokemonListComponent implements OnChanges, OnInit, OnDestroy {
   @Input() data: Pokemon[] = [];
   @Input() loading = false;
+  @Input() clearData = false;
 
   @Output() generateItemsEvent = new EventEmitter<'load' | 'initialize'>();
+  @Output() setFavoriteEvent = new EventEmitter<FavoriteEvent>();
 
   pokemons: Pokemon[] = [];
   favorite: any[] = [];
@@ -29,13 +40,20 @@ export class PokemonListComponent implements OnChanges {
 
   constructor(
     private _navController: NavController,
-    private dbService: NgxIndexedDBService
+    private _dbService: NgxIndexedDBService
   ) {}
+
+  ngOnInit(): void {
+    this.loadPokemons([]);
+  }
+
+  ngOnDestroy(): void {
+    this.loadPokemons([]);
+  }
 
   ngOnChanges(changes: any): void {
     if (
       changes?.data &&
-      changes?.data?.currentValue &&
       changes?.data?.currentValue?.length != this.lastPokemonArrayLength
     ) {
       this.loadPokemons(changes.data.currentValue);
@@ -49,6 +67,16 @@ export class PokemonListComponent implements OnChanges {
 
   loadPokemons(data: Pokemon[]) {
     this.loading = true;
+
+    if (this.clearData) {
+      this.clearPokemons(true);
+      this.clearData = false;
+    }
+
+    if (data.length === 0) {
+      this.pokemons = [];
+      this.loading = false;
+    }
 
     data.map((poke) => {
       this.pokemons.push(poke);
@@ -68,6 +96,7 @@ export class PokemonListComponent implements OnChanges {
   clearPokemons(clean: boolean) {
     if (clean) {
       this.pokemons = [];
+      this.data = [];
       this.lastPokemonArrayLength = 0;
       this.lastPokemonId = 0;
     }
@@ -78,7 +107,7 @@ export class PokemonListComponent implements OnChanges {
   }
 
   getFavoritePokemon(pokemon: Pokemon) {
-    this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
+    this._dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
       if (poke) {
         this.favorite[pokemon.id] = true;
       } else {
@@ -88,21 +117,27 @@ export class PokemonListComponent implements OnChanges {
   }
 
   favoritePokemon(pokemon: Pokemon) {
-    this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
+    this._dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
       if (poke) {
-        this.dbService.deleteByKey('favorites', pokemon.id).subscribe((key) => {
-          this.favorite[pokemon.id] = false;
-          console.log(key);
+        this.favorite[pokemon.id] = false;
+        this._dbService.deleteByKey('favorites', pokemon.id).subscribe(() => {
+          this.setFavoriteEvent.emit({
+            type: 'deleted',
+            pokemonId: pokemon.id,
+          });
         });
       } else {
-        this.dbService
+        this.favorite[pokemon.id] = true;
+        this._dbService
           .add('favorites', {
             pokemonId: pokemon.id,
             pokemonName: pokemon.name,
           })
-          .subscribe((key) => {
-            console.log('key: ', key);
-            this.favorite[pokemon.id] = true;
+          .subscribe(() => {
+            this.setFavoriteEvent.emit({
+              type: 'added',
+              pokemonId: pokemon.id,
+            });
           });
       }
     });
