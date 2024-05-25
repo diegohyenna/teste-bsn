@@ -11,6 +11,7 @@ import { CommonComponentsModule } from '../components/common-components.module';
 import { HomePage } from './pages/home/home.page';
 import { PokemonPage } from './pages/pokemon/pokemon.page';
 import { FavoritePage } from './pages/favorite/favorite.page';
+import { CommonDirectivesModule } from '../directives/common-directives.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { FavoritePage } from './pages/favorite/favorite.page';
     IonicModule,
     FolderPageRoutingModule,
     CommonComponentsModule,
+    CommonDirectivesModule,
   ],
   declarations: [FolderPage, HomePage, PokemonPage, FavoritePage],
 })

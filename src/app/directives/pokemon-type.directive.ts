@@ -46,6 +46,7 @@ export class PokemonTypeDirective implements OnInit, OnChanges {
       'style',
       `background: ${this.TYPES[pokemonType]}`
     );
+
     return;
   }
 

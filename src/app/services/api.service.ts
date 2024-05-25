@@ -14,14 +14,7 @@ export class ApiService {
     this.baseUrl = environment.apiBaseUrl;
   }
 
-  getAllPokemonsByLimitAndOffset(
-    limit: number,
-    offset: number
-  ): Observable<{
-    limit: number;
-    offset: number;
-    pokemons: Pokemon[];
-  }> {
+  getAllPokemonsByLimitAndOffset(limit: number, offset: number) {
     return this.httpClient
       .get<Pokemons>(`${this.baseUrl}pokemon?limit=${limit}&offset=${offset}`)
       .pipe(
@@ -52,7 +45,7 @@ export class ApiService {
   }
 
   getPokemonByName(name: string): Observable<Pokemon> {
-    return this.httpClient.get<Pokemon>(`pokemon/${name}`);
+    return this.httpClient.get<Pokemon>(`${this.baseUrl}pokemon/${name}`);
   }
 
   private getQueryParams(url: string) {

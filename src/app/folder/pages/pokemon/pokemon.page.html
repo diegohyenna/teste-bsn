@@ -1,12 +1,90 @@
-<app-header [title]="pokemonName"></app-header>
+<ion-content *ngIf="loading">
+  <ion-spinner
+    [style]="'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)'"
+  ></ion-spinner>
+</ion-content>
+<ion-header [translucent]="true" *ngIf="!loading">
+  <ion-toolbar appPokemonType [pokemonType]="pokemonType">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon
+      ></ion-button>
+    </ion-buttons>
+    <ion-list>
+      <ion-item class="pokemon-list">
+        <div class="pokemon-details">
+          <div class="pokemon-detail">
+            <ion-text class="pokemon-number">
+              <h5>{{ "#" + pokemonDetails?.id }}</h5>
+            </ion-text>
+            <ion-text class="pokemon-name">
+              <h5>{{ pokemonDetails?.name }}</h5>
+            </ion-text>
+            <ion-buttons slot="end">
+              <ion-button (click)="favoritePokemon(pokemonDetails)">
+                <ion-icon
+                  *ngIf="!this.setFavorite(pokemonDetails?.id)"
+                  name="star-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="this.setFavorite(pokemonDetails?.id)"
+                  name="star"
+                ></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </div>
+          <div class="pokemon-types">
+            <div
+              class="pokemon-type"
+              *ngFor="let type of pokemonDetails?.types"
+            >
+              {{ type.type.name }}
+            </div>
+          </div>
+        </div>
 
-<ion-content class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Detalhes</ion-title>
-    </ion-toolbar>
-  </ion-header>
+        <ion-avatar slot="end">
+          <img
+            [src]="pokemonDetails?.sprites?.other?.['official-artwork']?.front_default"
+            class="pokemon-avatar"
+          />
+        </ion-avatar>
+      </ion-item>
+    </ion-list>
+  </ion-toolbar>
+</ion-header>
 
-  <strong class="capitalize">Detalhes</strong>
-  <h1>Pokemon</h1>
+<ion-content
+  class="ion-padding"
+  *ngIf="!loading"
+  appPokemonType
+  [pokemonType]="pokemonType"
+>
+  <div class="pokemon-details">
+    <ion-text><h1>Estatísticas</h1></ion-text>
+    <div class="pokemon-weight">
+      <strong>Altura </strong>{{calculateWeight(pokemonDetails?.weight)}}
+    </div>
+    <div class="pokemon-height">
+      <strong>Peso </strong>{{calculateHeight(pokemonDetails?.height)}}
+    </div>
+
+    <ion-text><h3>Habilidades</h3></ion-text>
+    <div class="pokemon-abilities">
+      <div
+        class="pokemon-ability"
+        *ngFor="let ability of pokemonDetails?.abilities"
+      >
+        {{ability.ability.name}}
+      </div>
+    </div>
+  </div>
+
+  <div class="pokemon-stats">
+    <ion-text><h1>Estatísticas</h1></ion-text>
+    <div class="pokemon-stat" *ngFor="let stat of pokemonDetails?.stats">
+      <strong>{{stat.stat.name | uppercase}}</strong> {{" - " + stat.base_stat}}
+      <app-progress [value]="stat.base_stat"></app-progress>
+    </div>
+  </div>
 </ion-content>

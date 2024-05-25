@@ -1,5 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { Pokemon } from 'src/app/models/api.model';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -25,7 +24,6 @@ export class HomePage implements OnInit {
   constructor(private _apiService: ApiService) {}
 
   ngOnInit() {
-    this.loading = true;
     this.loadPokemons(this.offset, this.limit);
   }
 
@@ -53,13 +51,21 @@ export class HomePage implements OnInit {
           this.offset = result.offset;
           this.pokemons = result.pokemons;
         },
-        () => {},
         () => {
-          this.loading = false;
+          setTimeout(() => {
+            this.loading = false;
+          }, 1000);
+        },
+        () => {
+          setTimeout(() => {
+            this.loading = false;
+          }, 1000);
         }
       );
     } else {
-      this.loading = false;
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000);
     }
   }
 }

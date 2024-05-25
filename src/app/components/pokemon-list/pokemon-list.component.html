@@ -1,13 +1,9 @@
-<ion-spinner
-  *ngIf="loading"
-  name="dots"
-  style="position: fixed; top: 50"
-></ion-spinner>
+<ion-spinner *ngIf="loading" name="dots"></ion-spinner>
 <ion-list>
   <ion-item
     *ngFor="let pokemon of pokemons; let i = index"
-    class="pokemon-list"
-    [ngClass]="loading && pokemon.id > lastPokemonId ? 'hide' : 'show'"
+    appPokemonType
+    [pokemonType]="pokemon.types[0].type.name"
   >
     <div class="pokemon-details">
       <div class="pokemon-detail">
@@ -42,16 +38,9 @@
 
     <ion-avatar slot="end">
       <img
-        *ngIf="pokemon.sprites.other['official-artwork'].front_default"
         [src]="pokemon.sprites.other['official-artwork'].front_default"
-        alt="foto do pokemon"
+        class="pokemon-avatar"
       />
-      <ion-icon
-        *ngIf="!pokemon.sprites.other['official-artwork'].front_default"
-        size="large"
-        color="primary"
-        name="bug"
-      ></ion-icon>
     </ion-avatar>
   </ion-item>
 </ion-list>

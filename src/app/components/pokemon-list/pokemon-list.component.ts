@@ -1,19 +1,13 @@
 import {
-  AfterContentChecked,
-  AfterContentInit,
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Pokemon } from 'src/app/models/api.model';
-import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -22,23 +16,21 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class PokemonListComponent implements OnChanges {
   @Input() data: Pokemon[] = [];
-  loading = false;
+  @Input() loading = false;
 
   @Output() generateItemsEvent = new EventEmitter<'load' | 'initialize'>();
 
   pokemons: Pokemon[] = [];
-  pokemonPromisses: any = [];
+  favorite: any[] = [];
+
   lastPokemonArrayLength = 0;
+  loadedPokemonsCount = 0;
   lastPokemonId = 0;
-  imagesLoaded = 0;
-  favorite: any = [];
 
   constructor(
     private _navController: NavController,
     private dbService: NgxIndexedDBService
-  ) {
-    this.loading = true;
-  }
+  ) {}
 
   ngOnChanges(changes: any): void {
     if (
@@ -46,18 +38,8 @@ export class PokemonListComponent implements OnChanges {
       changes?.data?.currentValue &&
       changes?.data?.currentValue?.length != this.lastPokemonArrayLength
     ) {
-      this.loading = true;
-      this.pokemonPromisses.push(
-        this.data.forEach((poke) => {
-          this.lastPokemonId = poke.id;
-          this.pokemons.push(poke);
-          this.getFavoritePokemon(poke);
-        })
-      );
+      this.loadPokemons(changes.data.currentValue);
       this.lastPokemonArrayLength = changes?.data?.currentValue?.length;
-      Promise.all([this.pokemonPromisses]).then(() => {
-        this.loading = false;
-      });
     }
   }
 
@@ -65,13 +47,29 @@ export class PokemonListComponent implements OnChanges {
     this.generateItemsEvent.emit(type);
   }
 
+  loadPokemons(data: Pokemon[]) {
+    this.loading = true;
+
+    data.map((poke) => {
+      this.pokemons.push(poke);
+      this.lastPokemonId = poke.id;
+      this.getFavoritePokemon(poke);
+    });
+
+    this.pokemons.forEach((poke) => {
+      if (poke.id === this.lastPokemonId) {
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
+      }
+    });
+  }
+
   clearPokemons(clean: boolean) {
     if (clean) {
       this.pokemons = [];
-      this.pokemonPromisses = [];
       this.lastPokemonArrayLength = 0;
       this.lastPokemonId = 0;
-      this.imagesLoaded = 0;
     }
   }
 
