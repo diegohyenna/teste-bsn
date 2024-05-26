@@ -21,7 +21,9 @@ export class HomePage implements OnInit {
 
   private listPokemonEnded = false;
 
-  constructor(private _apiService: ApiService) {}
+  constructor(private _apiService: ApiService) {
+    this.loadPokemons(this.offset, this.limit);
+  }
 
   ngOnInit() {
     this.loadPokemons(this.offset, this.limit);

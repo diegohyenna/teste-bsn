@@ -16,6 +16,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 export class InfiniteScrollComponent implements OnChanges {
   ev: any;
   @Input() loading = false;
+  @Input() infiniteScrollDisable = false;
   @Output() generateItemsEvent = new EventEmitter<'load' | 'initialize'>();
   @Output() handleRefreshEvent = new EventEmitter<boolean>();
 

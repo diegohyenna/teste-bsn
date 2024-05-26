@@ -1,5 +1,6 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import {
-  AfterContentChecked,
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -7,7 +8,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
@@ -16,6 +16,7 @@ import { Pokemon } from 'src/app/models/api.model';
 type FavoriteEvent = {
   type: 'added' | 'deleted';
   pokemonId: number;
+  url: string;
 };
 
 @Component({
@@ -23,15 +24,17 @@ type FavoriteEvent = {
   templateUrl: 'pokemon-list.component.html',
   styleUrls: ['pokemon-list.component.scss'],
 })
-export class PokemonListComponent implements OnChanges, OnInit, OnDestroy {
+export class PokemonListComponent implements OnChanges, OnInit {
   @Input() data: Pokemon[] = [];
   @Input() loading = false;
   @Input() clearData = false;
+  @Input() infiniteScrollDisable = false;
 
   @Output() generateItemsEvent = new EventEmitter<'load' | 'initialize'>();
   @Output() setFavoriteEvent = new EventEmitter<FavoriteEvent>();
 
   pokemons: Pokemon[] = [];
+  pokemonsBackup: Pokemon[] = [];
   favorite: any[] = [];
 
   lastPokemonArrayLength = 0;
@@ -40,15 +43,31 @@ export class PokemonListComponent implements OnChanges, OnInit, OnDestroy {
 
   constructor(
     private _navController: NavController,
+    private _activatedRouter: ActivatedRoute,
+    private _router: Router,
     private _dbService: NgxIndexedDBService
   ) {}
 
   ngOnInit(): void {
-    this.loadPokemons([]);
-  }
+    this.setFavoriteEvent.subscribe((result) => {
+      if (result.type == 'added') {
+        this.favorite[result.pokemonId] = true;
+      }
+      if (result.type == 'deleted') {
+        this.favorite[result.pokemonId] = false;
 
-  ngOnDestroy(): void {
-    this.loadPokemons([]);
+        if (result.url.includes('favorite'))
+          this.pokemons = this.pokemons.filter(
+            (poke) => poke.id !== result.pokemonId
+          );
+      }
+    });
+
+    this._activatedRouter.paramMap.forEach(() => {
+      this.pokemonsBackup = this.pokemons;
+      this.loadPokemons([]);
+      this.loadPokemons(this.pokemonsBackup);
+    });
   }
 
   ngOnChanges(changes: any): void {
@@ -124,6 +143,7 @@ export class PokemonListComponent implements OnChanges, OnInit, OnDestroy {
           this.setFavoriteEvent.emit({
             type: 'deleted',
             pokemonId: pokemon.id,
+            url: this._router.url.toString(),
           });
         });
       } else {
@@ -137,6 +157,7 @@ export class PokemonListComponent implements OnChanges, OnInit, OnDestroy {
             this.setFavoriteEvent.emit({
               type: 'added',
               pokemonId: pokemon.id,
+              url: this._router.url.toString(),
             });
           });
       }

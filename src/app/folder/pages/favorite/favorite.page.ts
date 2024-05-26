@@ -9,6 +9,7 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class FavoritePage implements OnInit, OnChanges {
   pokemons: Pokemon[] = [];
+  pokemonsBackup: Pokemon[] = [];
   clearData = false;
   loading = false;
 
@@ -35,18 +36,8 @@ export class FavoritePage implements OnInit, OnChanges {
     }
   }
 
-  setFavorite(event: any) {
-    if (event.type == 'deleted') {
-      this.clearData = true;
-      this.pokemons = this.pokemons.filter(
-        (poke) => poke.id !== event.pokemonId
-      );
-    }
-  }
-
   loadPokemons() {
     let data: Pokemon[] = [];
-    this.pokemons = [];
     this.loading = true;
     this.clearData = true;
     this._dbIndexed.getAll('favorites').subscribe(
@@ -56,6 +47,7 @@ export class FavoritePage implements OnInit, OnChanges {
             this.loading = false;
           }, 1000);
 
+        this.pokemons = [];
         result.forEach((pokemon: any) =>
           this._apiService
             .getPokemonByName(pokemon.pokemonName)
@@ -65,7 +57,7 @@ export class FavoritePage implements OnInit, OnChanges {
                 this.pokemons = data;
                 setTimeout(() => {
                   this.loading = false;
-                }, 1000);
+                }, 2000);
               }
             })
         );
@@ -73,7 +65,7 @@ export class FavoritePage implements OnInit, OnChanges {
       () => {
         setTimeout(() => {
           this.loading = false;
-        }, 1000);
+        }, 2000);
       }
     );
   }
