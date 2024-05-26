@@ -54,7 +54,7 @@ export class FavoritePage implements OnInit, OnChanges {
             .subscribe((poke) => {
               data.push(poke);
               if (result.length == data.length) {
-                this.pokemons = data;
+                this.pokemons = data.sort((a, b) => (a.id > b.id ? 1 : -1));
                 setTimeout(() => {
                   this.loading = false;
                 }, 2000);
