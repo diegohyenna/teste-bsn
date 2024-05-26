@@ -1,0 +1,10 @@
+<app-header title="Favoritos"></app-header>
+<ion-content class="ion-padding">
+  <app-pokemon-list
+    [data]="pokemons"
+    [loading]="loading"
+    [clearData]="true"
+    (generateItemsEvent)="generateItems($event)"
+    (setFavoriteEvent)="setFavorite($event)"
+  ></app-pokemon-list>
+</ion-content>

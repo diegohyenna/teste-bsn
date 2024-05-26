@@ -3,6 +3,11 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+  /** texto **/
+  --ion-text-color: #919191;
+  --ion-background-color: rgb(247, 247, 247);
+  --ion-text-pokemon-detail: #585858;
+
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;

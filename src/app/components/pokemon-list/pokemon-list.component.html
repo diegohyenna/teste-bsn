@@ -1,0 +1,51 @@
+<ion-spinner *ngIf="loading"></ion-spinner>
+<ion-list>
+  <ion-item
+    *ngFor="let pokemon of pokemons; let i = index"
+    appPokemonType
+    [pokemonType]="pokemon.types[0].type.name"
+  >
+    <div class="pokemon-details">
+      <div class="pokemon-detail">
+        <ion-text class="pokemon-number">
+          <h5>{{ "#" + pokemon.id }}</h5>
+        </ion-text>
+        <ion-text class="pokemon-name" (click)="goToPokemonPage(pokemon.name)">
+          <h5>{{ pokemon.name }}</h5>
+        </ion-text>
+        <ion-buttons slot="end">
+          <ion-button (click)="favoritePokemon(pokemon)">
+            <ion-icon
+              *ngIf="!this.favorite[pokemon.id]"
+              name="star-outline"
+            ></ion-icon>
+            <ion-icon *ngIf="this.favorite[pokemon.id]" name="star"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </div>
+
+      <div class="pokemon-types">
+        <div
+          class="pokemon-type"
+          *ngFor="let type of pokemon.types"
+          appPokemonType
+          [pokemonType]="type.type.name"
+        >
+          {{ type.type.name }}
+        </div>
+      </div>
+    </div>
+
+    <ion-avatar slot="end">
+      <img
+        [src]="pokemon.sprites.other['official-artwork'].front_default"
+        class="pokemon-avatar"
+      />
+    </ion-avatar>
+  </ion-item>
+</ion-list>
+<app-infinite-scroll
+  [loading]="loading"
+  (generateItemsEvent)="generateItems($event)"
+  (handleRefreshEvent)="clearPokemons($event)"
+></app-infinite-scroll>

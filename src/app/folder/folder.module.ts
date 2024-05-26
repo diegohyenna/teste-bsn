@@ -10,6 +10,8 @@ import { FolderPage } from './folder.page';
 import { CommonComponentsModule } from '../components/common-components.module';
 import { HomePage } from './pages/home/home.page';
 import { PokemonPage } from './pages/pokemon/pokemon.page';
+import { FavoritePage } from './pages/favorite/favorite.page';
+import { CommonDirectivesModule } from '../directives/common-directives.module';
 
 @NgModule({
   imports: [
@@ -18,7 +20,8 @@ import { PokemonPage } from './pages/pokemon/pokemon.page';
     IonicModule,
     FolderPageRoutingModule,
     CommonComponentsModule,
+    CommonDirectivesModule,
   ],
-  declarations: [FolderPage, HomePage, PokemonPage],
+  declarations: [FolderPage, HomePage, PokemonPage, FavoritePage],
 })
 export class FolderPageModule {}
