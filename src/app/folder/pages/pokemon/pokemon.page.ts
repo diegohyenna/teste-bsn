@@ -11,7 +11,7 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrl: './pokemon.page.scss',
 })
 export class PokemonPage implements OnInit {
-  pokemonName!: string;
+  pokemonName?: string | undefined;
   pokemonDetails?: Pokemon;
   pokemonType = '';
   favorite: any = [];
@@ -57,13 +57,14 @@ export class PokemonPage implements OnInit {
   }
 
   getFavoritePokemon(pokemon: Pokemon) {
-    this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
-      if (poke) {
-        this.favorite[pokemon.id] = true;
-      } else {
-        this.favorite[pokemon.id] = false;
-      }
-    });
+    if (pokemon)
+      this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
+        if (poke) {
+          this.favorite[pokemon.id] = true;
+        } else {
+          this.favorite[pokemon.id] = false;
+        }
+      });
   }
 
   calculateWeight(pokemonWeight: number | undefined) {
@@ -76,17 +77,33 @@ export class PokemonPage implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.pokemonName = this._activatedRoute.snapshot.paramMap.get(
-      'pokemon'
-    ) as string;
+    this.pokemonName =
+      (this._activatedRoute.snapshot.paramMap.get('pokemon') as string) ||
+      undefined;
 
-    this._apiService.getPokemonByName(this.pokemonName).subscribe((details) => {
-      this.pokemonDetails = details;
-      this.pokemonType = details.types[0].type.name;
-      this.getFavoritePokemon(this.pokemonDetails);
+    if (this.pokemonName != undefined) {
+      this._apiService
+        .getPokemonByName(this.pokemonName)
+        .subscribe((details) => {
+          if (details) {
+            this.pokemonDetails = details;
+            if (details.types && details.types.length > 0) {
+              this.pokemonType = details.types[0].type.name;
+            }
+            this.getFavoritePokemon(this.pokemonDetails);
+            setTimeout(() => {
+              this.loading = false;
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              this.loading = false;
+            }, 2000);
+          }
+        });
+    } else {
       setTimeout(() => {
         this.loading = false;
       }, 2000);
-    });
+    }
   }
 }

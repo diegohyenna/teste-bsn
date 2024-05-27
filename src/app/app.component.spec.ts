@@ -6,10 +6,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-
-
   beforeEach(async () => {
-
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -28,9 +25,9 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-label');
-    expect(menuItems.length).toEqual(12);
-    expect(menuItems[0].textContent).toContain('Inbox');
-    expect(menuItems[1].textContent).toContain('Outbox');
+    expect(menuItems.length).toEqual(2);
+    expect(menuItems[1].innerHTML).toContain('Favoritos');
+    expect(menuItems[0].innerHTML).toContain('Pokemons');
   });
 
   it('should have urls', () => {
@@ -38,9 +35,12 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-item');
-    expect(menuItems.length).toEqual(12);
-    expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual('/folder/inbox');
-    expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual('/folder/outbox');
+    expect(menuItems.length).toEqual(2);
+    expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual(
+      '/folder/pokemons'
+    );
+    expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual(
+      '/folder/favorite'
+    );
   });
-
 });
