@@ -19,11 +19,9 @@ export class HomePage implements OnInit {
   pokemons: Pokemon[] = [];
   loading = false;
 
-  private listPokemonEnded = false;
+  listPokemonEnded = false;
 
-  constructor(private _apiService: ApiService) {
-    this.loadPokemons(this.offset, this.limit);
-  }
+  constructor(private _apiService: ApiService) {}
 
   ngOnInit() {
     this.loadPokemons(this.offset, this.limit);

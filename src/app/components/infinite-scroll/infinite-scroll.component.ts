@@ -4,7 +4,6 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 

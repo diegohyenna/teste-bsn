@@ -51,11 +51,10 @@ describe('PokemonPage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PokemonPage);
     component = fixture.componentInstance;
-    // fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(fixture).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   it('should navigate to favorite page', () => {
