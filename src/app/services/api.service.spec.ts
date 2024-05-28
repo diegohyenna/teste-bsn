@@ -1,11 +1,12 @@
-import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { ApiService } from './api.service';
+import { TestBed } from '@angular/core/testing';
+
+import { Pokemons } from '../models/api.model';
 import { environment } from './../../environments/environment';
-import { Pokemon, Pokemons } from '../models/api.model';
+import { ApiService } from './api.service';
 
 describe('ApiService', () => {
   let service: ApiService;

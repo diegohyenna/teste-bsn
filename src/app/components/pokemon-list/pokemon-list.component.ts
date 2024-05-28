@@ -1,14 +1,12 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Pokemon } from 'src/app/models/api.model';

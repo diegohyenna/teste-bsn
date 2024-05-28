@@ -1,7 +1,7 @@
-import { PokemonTypeDirective } from './pokemon-type.directive';
-import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
+
+import { PokemonTypeDirective } from './pokemon-type.directive';
 
 // Component to test directive with
 @Component({

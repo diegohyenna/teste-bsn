@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
-import { Observable, from, mergeMap, map, forkJoin, of } from 'rxjs';
-import { Pokemon, Pokemons, Result } from '../models/api.model';
+import { forkJoin, map, mergeMap, Observable } from 'rxjs';
+
+import { Pokemon, Pokemons } from '../models/api.model';
+import { environment } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

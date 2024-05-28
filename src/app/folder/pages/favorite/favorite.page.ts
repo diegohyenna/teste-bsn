@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Pokemon } from 'src/app/models/api.model';
 import { ApiService } from 'src/app/services/api.service';
@@ -7,7 +7,7 @@ import { ApiService } from 'src/app/services/api.service';
   selector: 'app-favorite',
   templateUrl: './favorite.page.html',
 })
-export class FavoritePage implements OnInit, OnChanges {
+export class FavoritePage implements OnInit {
   pokemons: Pokemon[] = [];
   pokemonsBackup: Pokemon[] = [];
   clearData = false;
@@ -20,10 +20,6 @@ export class FavoritePage implements OnInit, OnChanges {
 
   ngOnInit() {
     this.loadPokemons();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
   }
 
   generateItems(type: string) {

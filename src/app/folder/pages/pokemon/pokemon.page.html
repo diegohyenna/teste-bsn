@@ -20,18 +20,6 @@
             <ion-text class="pokemon-name">
               <h5>{{ pokemonDetails?.name }}</h5>
             </ion-text>
-            <ion-buttons slot="end">
-              <ion-button (click)="favoritePokemon(pokemonDetails)">
-                <ion-icon
-                  *ngIf="!this.setFavorite(pokemonDetails?.id)"
-                  name="star-outline"
-                ></ion-icon>
-                <ion-icon
-                  *ngIf="this.setFavorite(pokemonDetails?.id)"
-                  name="star"
-                ></ion-icon>
-              </ion-button>
-            </ion-buttons>
           </div>
           <div class="pokemon-types">
             <div

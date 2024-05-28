@@ -94,42 +94,6 @@ describe('PokemonPage', () => {
     });
   }));
 
-  it('should add and remove favorite pokemon', () => {
-    const mockPokemon: Partial<Pokemon> = {
-      id: 25,
-      name: 'pikachu',
-      weight: 60,
-      height: 4,
-      types: [{ type: { name: 'electric', url: '' }, slot: 0 }],
-    };
-
-    const pokemonFavorite = { pokemonName: 'pikachu', pokemonId: 25 };
-
-    dbServiceMock.getByID.and.returnValue(of(null));
-    dbServiceMock.add.and.returnValue(of(pokemonFavorite));
-    apiServiceMock.getPokemonByName.and.returnValue(of(mockPokemon));
-
-    component.ngOnInit();
-
-    component.favoritePokemon(mockPokemon as any);
-    expect(dbServiceMock.getByID).toHaveBeenCalledWith(
-      'favorites',
-      mockPokemon.id
-    );
-
-    expect(component.favorite[pokemonFavorite.pokemonId]).toEqual(true);
-
-    dbServiceMock.getByID.and.returnValue(of(pokemonFavorite));
-    dbServiceMock.deleteByKey.and.returnValue(of(true));
-    component.favoritePokemon(mockPokemon as any);
-    expect(dbServiceMock.deleteByKey).toHaveBeenCalledWith(
-      'favorites',
-      mockPokemon.id
-    );
-
-    expect(component.favorite[pokemonFavorite.pokemonId]).toEqual(false);
-  });
-
   it('should calculate weight correctly', () => {
     const weight = component.calculateWeight(60);
     expect(weight).toBe('6kg');

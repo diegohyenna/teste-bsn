@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { CommonServicesModule } from './services/common-services.module';
+import { AppComponent } from './app.component';
 import { CommonDirectivesModule } from './directives/common-directives.module';
-
-import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
+import { CommonServicesModule } from './services/common-services.module';
 
 const dbConfig: DBConfig = {
   name: 'MyDb',

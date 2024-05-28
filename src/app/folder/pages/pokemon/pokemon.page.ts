@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
@@ -32,41 +32,6 @@ export class PokemonPage implements OnInit {
     this._navCtrl.back();
   }
 
-  favoritePokemon(pokemon: Pokemon | undefined) {
-    if (pokemon)
-      this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
-        if (poke) {
-          this.dbService.deleteByKey('favorites', pokemon.id).subscribe(() => {
-            this.favorite[pokemon.id] = false;
-          });
-        } else {
-          this.dbService
-            .add('favorites', {
-              pokemonId: pokemon.id,
-              pokemonName: pokemon.name,
-            })
-            .subscribe(() => {
-              this.favorite[pokemon.id] = true;
-            });
-        }
-      });
-  }
-
-  setFavorite(pokemonId: number | undefined) {
-    return pokemonId ? this.favorite[pokemonId] : '';
-  }
-
-  getFavoritePokemon(pokemon: Pokemon) {
-    if (pokemon)
-      this.dbService.getByID('favorites', pokemon.id).subscribe((poke) => {
-        if (poke) {
-          this.favorite[pokemon.id] = true;
-        } else {
-          this.favorite[pokemon.id] = false;
-        }
-      });
-  }
-
   calculateWeight(pokemonWeight: number | undefined) {
     return pokemonWeight ? pokemonWeight / 10 + 'kg' : '';
   }
@@ -90,7 +55,6 @@ export class PokemonPage implements OnInit {
             if (details.types && details.types.length > 0) {
               this.pokemonType = details.types[0].type.name;
             }
-            this.getFavoritePokemon(this.pokemonDetails);
             setTimeout(() => {
               this.loading = false;
             }, 2000);

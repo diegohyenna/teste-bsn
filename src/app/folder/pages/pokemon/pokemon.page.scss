@@ -69,8 +69,8 @@ ion-item {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
-    border-bottom-left-radius: 0;
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.15);
   }
 
   .pokemon-details {
@@ -98,7 +98,6 @@ ion-item {
         h5 {
           overflow: hidden;
           text-overflow: ellipsis;
-          cursor: pointer;
         }
       }
 
