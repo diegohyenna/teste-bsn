@@ -52,7 +52,6 @@
 
 ## Rodando os testes unitários
 
-- É preciso ter o navegador Chrome instalado
 - Na pasta raiz do projeto rode o comando:
   - Para navegador Chrome: `npm run test`
   - Para navegador Firefox: `npm run test:firefox`
